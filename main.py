@@ -46,9 +46,22 @@ def main():
     #me_img = pygame.transform.scale(get_image('myself.png'), (20, 20))
     me = player(screen)
 
-
+    # Define parameters
+    t_max = 100
+    dt = .1
+    t = np.linspace(0, t_max, int(t_max/dt) + 1)
+    # numer of humans
+    N = N_humans
+    # one exposed person S_0 = 1–1/N, E_0 = 1/N, I_0 = 0, R_0 = 0
+    init_vals = 1 - 1/N, 1/N, 0, 0
+    alpha = 0.2
+    beta = 1.75
+    gamma = 0.5
+    params = alpha, beta, gamma
+    # Run simulation
+    results = model.base_seir_model(init_vals, params, t)
+    
     # Titel des Fensters setzen, Mauszeiger nicht verstecken und Tastendrücke wiederholt senden.
-
     pygame.display.set_caption("Virus-Simulation")
 
     pygame.mouse.set_visible(1)
@@ -70,7 +83,7 @@ def main():
         #screen.fill((0,0,0))
         screen.blit(back.image,back.rect)
         # Alle aufgelaufenen Events holen und abarbeiten.
-
+    
         for id, person in enumerate(humans):
             # normalize = True -> Geschwindigkeit ist konstant
             # normalize = False -> Geschwindigkeit ist "physikalisch"
