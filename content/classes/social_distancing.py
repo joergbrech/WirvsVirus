@@ -18,12 +18,12 @@ class SocialDistSimulationClass(object):
 
         # Provisional: Set social distancing factor via command line.
         # Launch with 'python main.py 0.7' or any value between 0 and 1.
-        try:
-            import sys
-            if len(sys.argv) > 1:
-                self.set_social_distancing(float(sys.argv[1]))
-        except ImportError:
-            pass
+        #try:
+        #    import sys
+        #    if len(sys.argv) > 1:
+        #        self.set_social_distancing(float(sys.argv[1]))
+        #except ImportError:
+        #    pass
 
 
     def set_social_distancing(self, value):
