@@ -33,15 +33,28 @@ class Model(object):
         # to get 1/gamma value of 2 days, so gamma = 0.5.
         # Plugging the R0 and gamma values into Equation (6), we get an estimate of beta = 1.75.
         # https://towardsdatascience.com/social-distancing-to-slow-the-coronavirus-768292f04296
+        # constraint: fixed population
         def base_seir_model(self,  init_vals, params, t):
                 S_0, E_0, I_0, R_0 = init_vals
                 S, E, I, R = [S_0], [E_0], [I_0], [R_0]
+                #alpha is the inverse of the incubation period (1/t_incubation)
+                #beta is the average contact rate in the population
+                #gamma is the inverse of the mean infectious period (1/t_infectious)
                 alpha, beta, gamma = params
+                # one day time step
                 dt = t[1] - t[0]
-                for _ in t[1:]:
+                for _ in t[1:]: 
+                    #change in people susceptible to the disease
+                    #moderated by the number of infected people and their contact with the infected.
                     next_S = S[-1] - (beta*S[-1]*I[-1])*dt
+                    #people who have been exposed to the disease
+                    # grows based on the contact rate and decreases based on the incubation period 
+                    # whereby people then become infected
                     next_E = E[-1] + (beta*S[-1]*I[-1] - alpha*E[-1])*dt
+                    #change in infected people based on the exposed population and the incubation period
+                    #decreases based on the infectious period: the higher gamma is, the more quickly people die/recove
                     next_I = I[-1] + (alpha*E[-1] - gamma*I[-1])*dt
+                    #no longer infected: immune or diseased
                     next_R = R[-1] + (gamma*I[-1])*dt
                     S.append(next_S)
                     E.append(next_E)
